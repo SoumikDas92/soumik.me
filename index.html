@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="cyber-dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
     <title>TERMINAL // SOUMIK_DAS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- 1. SYSTEM BOOT DISPLAY INTERFACE -->
+    <!-- CYBER DIAGNOSTIC LOADER CONSOLE -->
     <div id="loading-screen">
         <div class="loader-terminal">
-            <p class="load-line">> COMPILING DATA ARCHITECTURE...</p>
-            <p class="load-line">> CORRELATING COGNITIVE PATHS...</p>
-            <p class="load-line">> SYNCING GRID LINK: B.TECH_CSE_CORE...</p>
+            <p class="load-line">> INITIALIZING BOOT_SEQUENCE...</p>
+            <p class="load-line">> SYNCING DUAL_DEVICE_OPTIMIZATIONS...</p>
+            <p class="load-line">> ESTABLISHING B.TECH_CSE_NODES...</p>
             <div class="progress-bar-container">
                 <div class="progress-bar"></div>
             </div>
@@ -21,85 +20,92 @@
         </div>
     </div>
 
-    <!-- 2. HARDWARE GRAPHICS LAYERS -->
-    <div id="custom-cyber-cursor"></div>
+    <!-- DIGITAL BACKGROUND ANIMATION CANVAS LAYER -->
     <canvas id="cyberCanvas"></canvas>
 
-    <!-- 3. TOP LEVEL SYSTEM NAVIGATION TERMINAL -->
+    <!-- FLOATING RESPONSIVE HEADER CONSOLE -->
     <nav class="cyber-nav">
-        <div class="nav-brand">SD_OS // CORE_SYS_</div>
-        <div class="nav-controls">
-            <!-- INNOVATIVE DESIGN: THEME DUAL TOGGLE SWITCH -->
-            <button class="theme-toggle" onclick="toggleCyberTheme()" title="Toggle Theme Matrix">
-                <span class="theme-icon">⚡</span> MATRIX_MODE
-            </button>
-            <div class="nav-tabs">
-                <button class="tab-btn active" onclick="switchConsole('profile')">01_CORE</button>
-                <button class="tab-btn" onclick="switchConsole('projects')">02_ARCHIVES</button>
-                <button class="tab-btn alert-tab" onclick="switchConsole('achievements')">03_LOCKED</button>
-            </div>
+        <div class="nav-brand" onclick="toggleCyberTheme()">SD_OS // V3.0</div>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchConsole('profile')">01_CORE</button>
+            <button class="tab-btn" onclick="switchConsole('projects')">02_ARCH</button>
+            <button class="tab-btn alert-tab" onclick="switchConsole('achievements')">03_LOCK</button>
         </div>
     </nav>
 
-    <!-- 4. CORE CONTROLLER HUB PANELS -->
+    <!-- CORE CONTENT PANEL LAYER -->
     <main class="interface-wrapper">
         
-        <!-- CONSOLE PANEL: PROFILE -->
+        <!-- MODULE 01: PROFILE SECTION -->
         <section id="profile-panel" class="console-panel active">
             <div class="glitch-wrapper">
-                <h1 class="glitch-text" data-text="_SOUMIK_">_SOUMIK_</h1>
+                <h1 class="glitch-text" data-text="SOUMIK_DAS_">SOUMIK_DAS_</h1>
             </div>
             
             <div class="grid-layout">
-                <!-- Academic Track -->
+                <!-- Academic Module Card -->
                 <div class="cyber-card neon-border-blue">
-                    <div class="card-header">[ ACADEMIC_PATH ]</div>
+                    <div class="card-header">[ CURRENT_STATION ]</div>
                     <h3>B.TECH IN CSE</h3>
                     <p class="tag-sub">> COMPUTER SCIENCE & ENGINEERING</p>
                     <div class="status-indicator processing">
-                        <span class="pulse-dot"></span> SYSTEM_STATUS: INITIALIZING_NODE
+                        <span class="pulse-dot"></span> Diagnostics Active
                     </div>
                 </div>
 
-                <!-- Career Ambitions -->
+                <!-- Ambitions Module Card -->
                 <div class="cyber-card neon-border-magenta">
-                    <div class="card-header">[ AMBITION_STREAM ]</div>
+                    <div class="card-header">[ FUTURE_OBJECTIVE ]</div>
                     <h3>GAME_DEVELOPER</h3>
-                    <p class="tag-sub">> INTERACTIVE ENGINE ARCHITECTURE</p>
+                    <p class="tag-sub">> CORE INTERACTIVE MECHANICS</p>
                     <p class="body-text">
-                        Focused on writing clean code mechanics, optimizing low-level memory logic, and crafting dark, atmospheric gameplay environments.
+                        Building complex digital mechanics, interactive gameplay architectures, and dark, immersive virtual environments from scratch.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- CONSOLE PANEL: PROJECTS -->
+        <!-- MODULE 02: ARCHIVES / PROJECTS -->
         <section id="projects-panel" class="console-panel">
-            <header class="panel-title">// ACTIVE_GITHUB_REPOSITORIES</header>
+            <header class="panel-title">// ACTIVE_REPOSITORIES</header>
             <div class="grid-layout">
-                <div class="project-node interactive-card">
-                    <div class="node-tag">// LIVE_CORE_NODE</div>
+                <div class="project-node">
+                    <div class="node-tag">// CORE_PROJ_01</div>
                     <h3>CYBER_PORTFOLIO</h3>
-                    <p class="body-text">An ultra-stylized web console interface built using vanilla HTML, CSS, and JS components, deployed seamlessly on GitHub Pages.</p>
+                    <p class="body-text">> Responsive, zero-latency interface environment hosted live on GitHub Pages framework layers.</p>
                 </div>
             </div>
         </section>
 
-        <!-- CONSOLE PANEL: ACHIEVEMENTS -->
+        <!-- MODULE 03: ACHIEVEMENTS LAYER -->
         <section id="achievements-panel" class="console-panel">
             <div class="lockdown-wrapper">
                 <div class="matrix-lock-icon">🔒</div>
-                <h2 class="glitch-text alert-color" data-text="COMING_VERY_SOON...">COMING_VERY_SOON...</h2>
-                <div class="glitch-bar"></div>
+                <h2 class="glitch-text alert-color" data-text="COMING_SOON...">COMING_SOON...</h2>
                 <p class="terminal-alert-text">
-                    > STATUS: SUB-SYSTEM ENCRYPTED. <br>
-                    > ERROR: Awaiting incoming data sync packets... <br>
-                    > Academic and gaming achievement nodes are locked by the network administrator.
+                    > WARNING: Sub-system encrypted.<br>
+                    > Awaiting data sync packet...<br>
+                    > Nodes locked by administrator.
                 </p>
             </div>
         </section>
-
     </main>
+
+    <!-- REWRITTEN DOCK: IMMERSIVE BACKGROUND CONSOLE TRACKER -->
+    <div class="system-data-dock">
+        <div class="dock-segment hide-mobile">
+            <span class="dock-label">CURSOR_X:</span> <span id="dock-mx">000</span>
+        </div>
+        <div class="dock-segment hide-mobile">
+            <span class="dock-label">CURSOR_Y:</span> <span id="dock-my">000</span>
+        </div>
+        <div class="dock-segment">
+            <span class="dock-label">SYS_STATUS:</span> <span class="dock-value text-green">ONLINE</span>
+        </div>
+        <div class="dock-segment">
+            <span class="dock-label">PING:</span> <span id="dock-ping">24ms</span>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
