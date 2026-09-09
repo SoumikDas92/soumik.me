@@ -1,208 +1,89 @@
 /**
  * ============================================================================
- * SD_OS v2.7 - CORE INTERFACE & ROBOTIC COMBAT MECHANICS
- * AUTHOR: SOUMIK_DAS | MODULE: BATTLE SYSTEM INTEGRATION
+ * SD_OS v3.0 - STABILIZED UNIVERSAL DEVICE PIPELINE
+ * AUTHOR: SOUMIK_DAS | MODULE: CORE PROCESSOR & STABILIZATION
  * ============================================================================
  */
 
-// --- GLOBAL STATE ENGINE ---
+// --- GLOBAL VARIABLES & SYSTEM CAPABILITIES MATRIX ---
 const state = {
     theme: localStorage.getItem('cyber-theme') || 'cyber-dark',
     audioCtx: null,
     canvasResizeTimeout: null,
+    isMobile: window.innerWidth < 768,
     mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-    trail: Array(8).fill({ x: 0, y: 0 })
+    trail: Array(5).fill({ x: 0, y: 0 }), 
+    matrixFrameCount: 0
 };
 
-// --- SYNCHRONIZE INITIAL DOM GRAPHICS STATE ---
+// --- INITIALIZE THEME SYSTEM CONFIGURATIONS ---
 document.documentElement.setAttribute('data-theme', state.theme);
 
-// --- 1. HARDWARE ACCELERATED CUSTOM POINTER INTEGRATION ---
+// --- 1. COORDINATED RESPONSIVE MOUSE & INTERACTIVE ACCELEROMETER COGNITION ---
 function initCustomCursorSystem() {
-    let cursorMain = document.getElementById('custom-cyber-cursor');
-    if (!cursorMain) {
-        cursorMain = document.createElement('div');
-        cursorMain.id = 'custom-cyber-cursor';
-        document.body.appendChild(cursorMain);
-    }
-
+    const cursorMain = document.getElementById('custom-cyber-cursor');
+    const dockMx = document.getElementById('dock-mx');
+    const dockMy = document.getElementById('dock-my');
+    
     window.addEventListener('mousemove', (e) => {
         state.mouse.x = e.clientX;
         state.mouse.y = e.clientY;
-        cursorMain.style.transform = `translate3d(${state.mouse.x}px, ${state.mouse.y}px, 0)`;
+        
+        // 1a. Update localized numeric data telemetry arrays inside bottom dock values instantly
+        if (dockMx) dockMx.textContent = String(state.mouse.x).padStart(3, '0');
+        if (dockMy) dockMy.textContent = String(state.mouse.y).padStart(3, '0');
+        
+        // 1b. Render design pointer elements only on compatible desktop platforms
+        if (!state.isMobile && cursorMain) {
+            cursorMain.style.transform = `translate3d(${state.mouse.x}px, ${state.mouse.y}px, 0)`;
+        }
     });
 
     document.body.addEventListener('mouseover', (e) => {
-        if (e.target.closest('.tab-btn, .project-node, .theme-toggle-btn, .cyber-bot')) {
+        if (!state.isMobile && cursorMain && e.target.closest('.tab-btn, .project-node, .nav-brand')) {
             cursorMain.classList.add('cursor-hover-active');
         }
     });
 
     document.body.addEventListener('mouseout', (e) => {
-        if (e.target.closest('.tab-btn, .project-node, .theme-toggle-btn, .cyber-bot')) {
+        if (!state.isMobile && cursorMain && e.target.closest('.tab-btn, .project-node, .nav-brand')) {
             cursorMain.classList.remove('cursor-hover-active');
         }
     });
 }
 
-// --- 2. RETRO 8-BIT AUTONOMOUS COMBAT ENGINES ---
-function triggerRoboticShowdown() {
-    // 2a. Inject CSS Styles dynamically for standard structural elements
-    const styleBlock = document.createElement('style');
-    styleBlock.textContent = `
-        .cyber-bot {
-            position: fixed;
-            bottom: 10px;
-            width: 48px;
-            height: 48px;
-            z-index: 1000;
-            image-rendering: pixelated;
-            font-size: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: left 4s cubic-bezier(0.25, 0.46, 0.45, 0.94), right 4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.2s ease;
-            filter: drop-shadow(0 0 8px rgba(0,240,255,0.4));
-            user-select: none;
-            pointer-events: none;
-        }
-        .bot-left { left: -60px; }
-        .bot-right { right: -60px; transform: scaleX(-1); }
-        
-        .bot-spark {
-            position: fixed;
-            bottom: 25px;
-            font-size: 1.2rem;
-            z-index: 1001;
-            pointer-events: none;
-            animation: sparkOut 0.4s ease-out forwards;
-        }
-        @keyframes sparkOut {
-            0% { transform: scale(0.3) translate(0,0); opacity: 1; }
-            100% { transform: scale(1.5) translate(var(--mx), var(--my)); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(styleBlock);
-
-    // 2b. Construct Node Units
-    const botLeft = document.createElement('div');
-    botLeft.className = 'cyber-bot bot-left';
-    botLeft.innerHTML = '🤖'; 
-    botLeft.style.filter = 'drop-shadow(0 0 10px var(--neon-cyan))';
-
-    const botRight = document.createElement('div');
-    botRight.className = 'cyber-bot bot-right';
-    botRight.innerHTML = '👾'; 
-    botRight.style.filter = 'drop-shadow(0 0 10px var(--neon-magenta))';
-
-    document.body.appendChild(botLeft);
-    document.body.appendChild(botRight);
-
-    // 2c. Phase 1: Marching Sequence towards the middle bottom
-    setTimeout(() => {
-        botLeft.style.left = 'calc(50% - 50px)';
-        botRight.style.right = 'calc(50% - 50px)';
-    }, 500);
-
-    // 2d. Phase 2: Combat Engagement Logic Loop
-    setTimeout(() => {
-        let combatTimer = 0;
-        const midPointX = window.innerWidth / 2;
-
-        const battleInterval = setInterval(() => {
-            playCyberSound('glitch');
-            
-            const driftL = Math.random() * 15 - 5;
-            const driftR = Math.random() * 15 - 10;
-            botLeft.style.left = `calc(50% - 50px + ${driftL}px)`;
-            botRight.style.right = `calc(50% - 50px + ${driftR}px)`;
-            
-            botLeft.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
-            botRight.style.transform = `scaleX(-1) rotate(${Math.random() * 20 - 10}deg)`;
-
-            for(let k = 0; k < 3; k++) {
-                const spark = document.createElement('div');
-                spark.className = 'bot-spark';
-                spark.innerHTML = Math.random() > 0.5 ? '⚡' : '💥';
-                spark.style.left = `${midPointX + (Math.random() * 40 - 20)}px`;
-                spark.style.setProperty('--mx', `${Math.random() * 60 - 30}px`);
-                spark.style.setProperty('--my', `${Math.random() * -60 - 10}px`);
-                document.body.appendChild(spark);
-                setTimeout(() => spark.remove(), 400);
-            }
-
-            combatTimer++;
-            if (combatTimer > 12) {
-                clearInterval(battleInterval);
-                executeResolutionSequence(botLeft, botRight);
-            }
-        }, 200);
-
-    }, 4600); 
-
-    // 2e. Phase 3: Knockout & Victory Celebration Script Sequence
-    function executeResolutionSequence(leftUnit, rightUnit) {
-        const leftWins = Math.random() > 0.5;
-
-        leftUnit.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        rightUnit.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-
-        if (leftWins) {
-            rightUnit.style.transform = 'scaleX(-1) rotate(-90deg) translateY(15px)';
-            rightUnit.style.opacity = '0.4';
-            rightUnit.innerHTML = '';
-
-            leftUnit.style.left = 'calc(50% - 24px)';
-            leftUnit.innerHTML = '👑'; 
-            leftUnit.style.transform = 'scale(1.4) translateY(-15px)';
-            leftUnit.style.filter = 'drop-shadow(0 0 20px #39ff14)'; 
-        } else {
-            leftUnit.style.transform = 'rotate(90deg) translateY(15px)';
-            leftUnit.style.opacity = '0.4';
-            leftUnit.innerHTML = '';
-
-            rightUnit.style.right = 'calc(50% - 24px)';
-            rightUnit.innerHTML = '👑';
-            rightUnit.style.transform = 'scaleX(-1) scale(1.4) translateY(-15px)';
-            rightUnit.style.filter = 'drop-shadow(0 0 20px #39ff14)';
-        }
-        playCyberSound('success');
-    }
-}
-
-// --- 3. SWITCHBOARD PANEL NAVIGATION ROUTER ---
+// --- 2. MULTI-MODE CONSOLE INTERFACE NAVIGATION CONTROLS ---
 function switchConsole(panelTargetId) {
     playCyberSound('click');
-    
     const targetPanel = document.getElementById(`${panelTargetId}-panel`);
     if (!targetPanel) return;
 
-    document.querySelectorAll('.console-panel').forEach(panel => {
-        panel.classList.remove('active');
-    });
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
+    document.querySelectorAll('.console-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
     targetPanel.classList.add('active');
-    const targetButtons = document.querySelectorAll(`.tab-btn[onclick*="'${panelTargetId}'"]`);
-    targetButtons.forEach(btn => btn.classList.add('active'));
+    const linkedButtons = document.querySelectorAll(`.tab-btn[onclick*="'${panelTargetId}'"]`);
+    linkedButtons.forEach(b => b.classList.add('active'));
 }
 
-// --- 4. CORE MATRIX RENDER LABS (CANVAS DATA BACKGROUND) ---
+// --- 3. DYNAMIC LOW-OVERHEAD CANVAS HARDWARE RENDERING ENGINES ---
 const canvas = document.getElementById('cyberCanvas');
 if (canvas) {
     const ctx = canvas.getContext('2d');
-    const systemSymbols = '01🧬🎚️📡💻🤖⚔️SD_OS_BTECH_CSE_GAMEDEV_'.split('');
-    const fontSize = 14;
+    const systemSymbols = '01🧬💻🤖SD_OS_CSE_'.split('');
+    const fontSize = 12;
     let columns = 0;
     let dropTracks = [];
 
     function setupCanvasMetrics() {
+        state.isMobile = window.innerWidth < 768;
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         columns = Math.floor(canvas.width / fontSize) + 1;
-        dropTracks = Array(columns).fill(1).map(() => Math.random() * -30);
+        
+        // Mobile booster: Cap data matrix columns on small screens to reduce calculations
+        const trackCount = state.isMobile ? Math.min(columns, 35) : columns;
+        dropTracks = Array(trackCount).fill(1).map(() => Math.random() * -25);
     }
     setupCanvasMetrics();
 
@@ -212,7 +93,14 @@ if (canvas) {
     });
 
     function drawSystemMatrix() {
-        const fade = state.theme === 'cyber-dark' ? 'rgba(6, 6, 10, 0.06)' : 'rgba(242, 244, 247, 0.09)';
+        state.matrixFrameCount++;
+        
+        // MOBILE FRAME RATIO OPTIMIZER: Skips alternative calculations on mobile views to prevent overheating
+        if (state.isMobile && state.matrixFrameCount % 2 !== 0) {
+            return;
+        }
+
+        const fade = state.theme === 'cyber-dark' ? 'rgba(6, 6, 10, 0.08)' : 'rgba(242, 244, 247, 0.12)';
         const textNeon = state.theme === 'cyber-dark' ? '#00f0ff' : '#ff0055';
 
         ctx.fillStyle = fade;
@@ -222,29 +110,33 @@ if (canvas) {
         for (let idx = 0; idx < dropTracks.length; idx++) {
             ctx.fillStyle = textNeon;
             const char = systemSymbols[Math.floor(Math.random() * systemSymbols.length)];
-            ctx.fillText(char, idx * fontSize, dropTracks[idx] * fontSize);
+            const xPos = state.isMobile ? (idx * (canvas.width / dropTracks.length)) : (idx * fontSize);
+            ctx.fillText(char, xPos, dropTracks[idx] * fontSize);
 
             if (dropTracks[idx] * fontSize > canvas.height && Math.random() > 0.98) {
                 dropTracks[idx] = 0;
             }
-            dropTracks[idx] += 0.85;
+            dropTracks[idx] += 0.9;
         }
 
-        let currentX = state.mouse.x;
-        let currentY = state.mouse.y;
+        // Elastic pointer trail vectors rendered exclusively on top layout configurations
+        if (!state.isMobile) {
+            let currentX = state.mouse.x;
+            let currentY = state.mouse.y;
 
-        state.trail.forEach((point, i) => {
-            point.x += (currentX - point.x) * 0.35;
-            point.y += (currentY - point.y) * 0.35;
+            state.trail.forEach((point, i) => {
+                point.x += (currentX - point.x) * 0.35;
+                point.y += (currentY - point.y) * 0.35;
 
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, (8 - i) * 0.8, 0, Math.PI * 2);
-            ctx.fillStyle = state.theme === 'cyber-dark' ? `rgba(255, 0, 85, ${0.4 - i * 0.05})` : `rgba(0, 240, 255, ${0.4 - i * 0.05})`;
-            ctx.fill();
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, (5 - i) * 0.8, 0, Math.PI * 2);
+                ctx.fillStyle = state.theme === 'cyber-dark' ? `rgba(255, 0, 85, ${0.3 - i * 0.05})` : `rgba(0, 240, 255, ${0.3 - i * 0.05})`;
+                ctx.fill();
 
-            currentX = point.x;
-            currentY = point.y;
-        });
+                currentX = point.x;
+                currentY = point.y;
+            });
+        }
     }
     
     function animationEngineLoop() {
@@ -254,7 +146,7 @@ if (canvas) {
     requestAnimationFrame(animationEngineLoop);
 }
 
-// --- 5. HARDWARE MULTI-MODE OSCILLATOR AUDIO SYNTHESIZER ---
+// --- 4. HARDWARE AUDIOLOGY HARDWARE CONSOLE INTERFACES ---
 function initAudio() {
     if (!state.audioCtx) {
         state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -265,79 +157,83 @@ function initAudio() {
 }
 
 function playCyberSound(type) {
+    if (state.isMobile) return; // Suppress sound engine threads on small devices for optimized memory handling
     try {
         initAudio();
-const ctx = state.audioCtx;
-const osc = ctx.createOscillator();
-const gainNode = ctx.createGain();
-osc.connect(gainNode);gainNode.connect(ctx.destination);
-const now = ctx.currentTime;
-if (type === 'click') {
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(750, now);
-    osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
-    gainNode.gain.setValueAtTime(0.04, now);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);osc.start(now);
-    osc.stop(now + 0.08);
-} else if (type === 'glitch') {
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(Math.random() * 300 + 80, now);
-    gainNode.gain.setValueAtTime(0.02, now);
-    gainNode.gain.linearRampToValueAtTime(0.001, now + 0.05);
-    osc.start(now);
-    osc.stop(now + 0.05);
-} else if (type === 'success') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(523.25, now);
-    osc.frequency.setValueAtTime(783.99, now + 0.06);
-    gainNode.gain.setValueAtTime(0.03, now);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-    osc.start(now);
-    osc.stop(now + 0.2);
-}} 
-catch (e) {console.warn("Audio node generation block bypassed natively.");
+        const ctx = state.audioCtx;
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        const now = ctx.currentTime;
 
-}}
-// --- 6. THEME SWITCH CONSOLE INTERACTION MANAGEMENT ---
+        if (type === 'click') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(750, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
+            gainNode.gain.setValueAtTime(0.04, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.start(now); osc.stop(now + 0.08);
+        } else if (type === 'success') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(783.99, now + 0.06);
+            gainNode.gain.setValueAtTime(0.03, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.start(now); osc.stop(now + 0.2);
+        }
+    } catch (e) {
+        console.warn("Audio thread protection bypassed.");
+    }
+}
+
+// --- 5. THEME SWAPPING OPERATIONAL PIPELINES ---
 function toggleCyberTheme() {
     playCyberSound('success');
     state.theme = state.theme === 'cyber-dark' ? 'cyber-light' : 'cyber-dark';
     document.documentElement.setAttribute('data-theme', state.theme);
     localStorage.setItem('cyber-theme', state.theme);
 }
-// --- 7. LOADER PROCESS DIAGNOSTIC MATRIX INITIALIZATION ---
+
+// --- 6. ASYNCHRONOUS SIMULATED LOADER SEQUENCES ---
 window.addEventListener('DOMContentLoaded', () => {
     initCustomCursorSystem();
+
     const progressBar = document.querySelector('.progress-bar');
     const statusLabel = document.querySelector('.load-status');
     const loadingScreen = document.getElementById('loading-screen');
+    const dockPing = document.getElementById('dock-ping');
     let processValue = 0;
     
+    // Periodically fluctuate ping display inside the bottom data dock to simulate active server responses
+    setInterval(() => {
+        if(dockPing) {
+            dockPing.textContent = `${Math.floor(Math.random() * 18) + 12}ms`;
+        }
+    }, 2500);
+
     const loadInterval = setInterval(() => {
-        processValue += Math.floor(Math.random() * 5) + 2;
+        processValue += Math.floor(Math.random() * 6) + 3;
         
         if (processValue >= 100) {
             processValue = 100;
             clearInterval(loadInterval);
+            
             setTimeout(() => {
                 playCyberSound('success');
                 if (loadingScreen) {
                     loadingScreen.style.opacity = '0';
-                    loadingScreen.style.transform = 'translateY(-20px)';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        triggerRoboticShowdown();
-                    }, 600);
+                    setTimeout(() => loadingScreen.style.display = 'none', 400);
                 }
-            }, 400);
+            }, 300);
         }
         
-        // Fixed template string syntax strings here:
         if (progressBar) progressBar.style.width = `${processValue}%`;
         if (statusLabel) statusLabel.textContent = `LOADING SYSTEM: ${processValue}%`;
-    }, 55);
+    }, 45);
 });
 
-// --- GLOBAL EXPORTS EXTENSIONS HUB ---
+// --- CORE SYSTEM REGISTRIES LINK ---
 window.switchConsole = switchConsole;
 window.toggleCyberTheme = toggleCyberTheme;
