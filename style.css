@@ -1,32 +1,20 @@
-/* ============================================================================
-   GLOBAL STYLESHEET SCHEMA
-   ============================================================================ */
-
 :root {
-    /* DEFAULT CYBER DARK THEME PROFILE */
     --bg-dark: #06060a;
     --card-bg: rgba(12, 12, 20, 0.85);
     --neon-cyan: #00f0ff;
     --neon-magenta: #ff0055;
     --neon-green: #39ff14;
-    --neon-glow: rgba(0, 240, 255, 0.2);
+    --neon-amber: #ffaa00;
     --text-primary: #ececf1;
-    --text-muted: #808095;
-    --border-color: rgba(0, 240, 255, 0.2);
+    --text-muted: #808090;
     --cyber-font: 'Courier New', Courier, monospace;
 }
 
 [data-theme="cyber-light"] {
-    /* ALTERNATE MATRIX LIGHT THEME PROFILE */
     --bg-dark: #f0f2f5;
     --card-bg: rgba(255, 255, 255, 0.9);
-    --neon-cyan: #ff0055; /* Inverted priorities */
-    --neon-magenta: #00f0ff;
-    --neon-green: #00aa44;
-    --neon-glow: rgba(255, 0, 85, 0.15);
     --text-primary: #121214;
     --text-muted: #606070;
-    --border-color: rgba(255, 0, 85, 0.2);
 }
 
 * {
@@ -34,109 +22,32 @@
     padding: 0;
     box-sizing: border-box;
     font-family: var(--cyber-font);
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
     overflow-x: hidden;
-    position: relative;
     min-height: 100vh;
-    cursor: none; /* Hide default browser cursor cleanly */
-    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 1. STYLIZED OPERATOR CROSSHAIR POINTER */
+/* CROSSHAIR CURSOR OVERLAY (DISABLED NATIVELY ON MOBILE TOUCH CHANNELS) */
 #custom-cyber-cursor {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--neon-cyan);
-    border-radius: 50%;
-    position: fixed;
-    top: -10px;
-    left: -10px;
-    pointer-events: none;
-    z-index: 10000;
-    transform: translate3d(0, 0, 0);
-    transition: width 0.2s, height 0.2s, background-color 0.2s;
-    mix-blend-mode: difference; /* Highly stylized inverted color overlapping */
-}
-
-#custom-cyber-cursor::after {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: var(--neon-magenta);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-}
-
-/* Mouse hover reactive scale enlargement changes */
-.cursor-hover-active {
-    width: 35px !important;
-    height: 35px !important;
-    background-color: rgba(0, 240, 255, 0.1);
-    border-color: var(--neon-magenta) !important;
-}
-
-/* 2. DYNAMIC LOADING SEQUENCE GRID */
-#loading-screen {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: #020205;
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.loader-terminal {
-    width: 100%;
-    max-width: 600px;
-    background: #09090f;
-    border: 1px solid var(--neon-cyan);
-    padding: 2rem;
-    box-shadow: 0 0 20px var(--neon-glow);
-}
-
-.load-line {
-    color: var(--neon-cyan);
-    font-size: 0.9rem;
-    margin-bottom: 0.6rem;
-    letter-spacing: 1px;
-}
-
-.progress-bar-container {
-    width: 100%;
-    height: 12px;
-    border: 1px solid var(--neon-magenta);
-    margin: 1.5rem 0 0.5rem 0;
-    background: #020205;
-    padding: 2px;
-}
-
-.progress-bar {
-    width: 0%;
-    height: 100%;
+    width: 8px;
+    height: 8px;
     background: var(--neon-magenta);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate3d(-100px, -100px, 0);
+    mix-blend-mode: difference;
     box-shadow: 0 0 8px var(--neon-magenta);
 }
 
-.load-status {
-    color: var(--neon-green);
-    font-size: 0.85rem;
-    text-align: right;
-}
-
-/* 3. HARDWARE STREAM BACKGROUND CANVAS */
 #cyberCanvas {
     position: fixed;
     top: 0;
@@ -148,15 +59,69 @@ body {
     pointer-events: none;
 }
 
-/* 4. CONSOLE TOP LINK MENU BAR */
+/* LOADER DESIGN SYSTEM */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #020205;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    transition: opacity 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.loader-terminal {
+    width: 100%;
+    max-width: 500px;
+    background: #09090f;
+    border: 1px solid var(--neon-cyan);
+    padding: 1.5rem;
+}
+
+.load-line {
+    color: var(--neon-cyan);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    border: 1px solid var(--neon-magenta);
+    margin: 1.2rem 0 0.4rem 0;
+    background: #020205;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--neon-magenta);
+    box-shadow: 0 0 8px var(--neon-magenta);
+}
+
+.load-status {
+    color: var(--neon-green);
+    font-size: 0.75rem;
+    text-align: right;
+}
+
+/* HEADER COMPONENT */
 .cyber-nav {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     background: rgba(6, 6, 10, 0.85);
-    border-bottom: 1px solid var(--border-color);
-    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+    padding: 0.8rem 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -166,52 +131,29 @@ body {
 
 [data-theme="cyber-light"] .cyber-nav {
     background: rgba(240, 242, 245, 0.85);
+    border-bottom: 1px solid rgba(255, 0, 85, 0.15);
 }
 
 .nav-brand {
     color: var(--neon-cyan);
     font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.nav-controls {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-/* THEME CHANGER BUTTON CONTROL */
-.theme-toggle {
-    background: transparent;
-    border: 1px dashed var(--neon-cyan);
-    color: var(--neon-cyan);
-    padding: 0.4rem 0.8rem;
-    cursor: none;
-    font-size: 0.8rem;
-    font-weight: bold;
+    font-size: 0.9rem;
     letter-spacing: 1px;
-    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-.theme-toggle:hover {
-    background: var(--neon-cyan);
-    color: var(--bg-dark);
-    box-shadow: 0 0 10px var(--neon-cyan);
-}
+[data-theme="cyber-light"] .nav-brand { color: var(--neon-magenta); }
 
-.nav-tabs {
-    display: flex;
-    gap: 0.8rem;
-}
+.nav-tabs { display: flex; gap: 0.4rem; }
 
 .tab-btn {
     background: transparent;
     border: 1px solid var(--text-muted);
     color: var(--text-muted);
-    padding: 0.4rem 1rem;
-    cursor: none;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
     font-weight: bold;
-    transition: all 0.2s;
+    cursor: pointer;
 }
 
 .tab-btn:hover, .tab-btn.active {
@@ -220,147 +162,138 @@ body {
     background: rgba(0, 240, 255, 0.05);
 }
 
-.tab-btn.alert-tab {
-    border-color: rgba(255, 0, 85, 0.3);
-    color: var(--neon-magenta);
-}
+.tab-btn.alert-tab { border-color: rgba(255, 0, 85, 0.3); color: var(--neon-magenta); }
+.tab-btn.alert-tab.active { border-color: var(--neon-magenta); background: rgba(255, 0, 85, 0.05); }
 
-.tab-btn.alert-tab:hover, .tab-btn.alert-tab.active {
-    border-color: var(--neon-magenta);
-    background: rgba(255, 0, 85, 0.05);
-}
-
-/* 5. CONTENT INTERFACE ROUTING PANELS */
+/* MAIN CONTENT ARCHITECTURE */
 .interface-wrapper {
     position: relative;
     z-index: 2;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 7rem 2rem 2rem 2rem;
+    padding: 5rem 1.2rem 6rem 1.2rem; /* Bottom padding clear space buffer for the terminal dock */
 }
 
-.console-panel {
-    display: none; /* Fixed functional panel states hidden by default */
-}
+.console-panel { display: none; }
+.console-panel.active { display: block; }
 
-.console-panel.active {
-    display: block !important; /* Forces active visibility cleanly */
-}
-
-.grid-layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2.5rem;
-}
-
-/* 6. COMPONENT STYLING STRUCTURES */
 .glitch-text {
-    font-size: 3.5rem;
+    font-size: 2.2rem;
     font-weight: bold;
     color: var(--text-primary);
     position: relative;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
+    display: inline-block;
 }
 
 .glitch-text::before, .glitch-text::after {
     content: attr(data-text);
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background: var(--bg-dark);
 }
+.glitch-text::before { left: 1.5px; text-shadow: -1.5px 0 var(--neon-cyan); clip: rect(20px, 999px, 40px, 0); animation: cyber-glitch 5s infinite linear alternate-reverse; }
+.glitch-text::after { left: -1.5px; text-shadow: -1.5px 0 var(--neon-magenta); clip: rect(60px, 999px, 80px, 0); animation: cyber-glitch 2s infinite linear alternate-reverse; }
 
-.glitch-text::before { left: 2px; text-shadow: -2px 0 var(--neon-cyan); clip: rect(44px, 450px, 56px, 0); animation: glitch-anim-1 5s infinite linear alternate-reverse; }
-.glitch-text::after { left: -2px; text-shadow: -2px 0 var(--neon-magenta); clip: rect(85px, 450px, 140px, 0); animation: glitch-anim-2 2s infinite linear alternate-reverse; }
+@keyframes cyber-glitch {
+    0% { clip: rect(10px, 9999px, 30px, 0); }
+    50% { clip: rect(40px, 9999px, 15px, 0); }
+    100% { clip: rect(25px, 9999px, 55px, 0); }
+}
 
+.grid-layout { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1.8rem; }
 .cyber-card, .project-node {
     background: var(--card-bg);
-    padding: 2rem;
-    border: 1px solid var(--border-color);
-    position: relative;
-    transition: all 0.3s;
+    padding: 1.2rem;
+    border: 1px solid rgba(128, 128, 144, 0.2);
+    border-left: 3px solid var(--neon-cyan);
 }
+.neon-border-blue { border-left-color: var(--neon-cyan); }
+.neon-border-magenta { border-left-color: var(--neon-magenta); }
 
-.neon-border-blue { border-left: 4px solid var(--neon-cyan); }
-.neon-border-magenta { border-left: 4px solid var(--neon-magenta); }
+.card-header, .node-tag { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+.tag-sub { font-size: 0.75rem; color: var(--neon-green); margin: 0.2rem 0 0.8rem 0; }
+.body-text { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
 
-.project-node:hover {
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 15px var(--neon-glow);
-    transform: translateY(-2px);
-}
-
-.card-header, .node-tag {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    letter-spacing: 2px;
-    margin-bottom: 0.8rem;
-}
-
-.node-tag { color: var(--neon-green); }
-
-.tag-sub {
-    font-size: 0.8rem;
-    color: var(--neon-green);
-    margin-bottom: 1.2rem;
-}
-
-.body-text {
-    color: var(--text-muted);
-    line-height: 1.6;
-    font-size: 0.9rem;
-}
-
-/* 7. ALERTS & NETWORK INDICATORS */
+/* TELEMETRY HEARBEAT CHANNEL INDICATORS */
 .status-indicator {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    font-size: 0.8rem;
-    background: rgba(57, 255, 20, 0.05);
-    padding: 0.4rem 0.8rem;
-    border: 1px solid var(--neon-green);
-    color: var(--neon-green);
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    background: rgba(255, 170, 0, 0.08);
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--neon-amber);
+    color: var(--neon-amber);
 }
-
 .pulse-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--neon-green);
+    width: 5px; height: 5px;
+    background-color: var(--neon-amber);
     border-radius: 50%;
-    animation: flash 1s infinite alternate;
+    animation: pulse 1.2s infinite alternate;
 }
+@keyframes pulse { 0% { opacity: 0.4; } 100% { opacity: 1; box-shadow: 0 0 6px var(--neon-amber); } }
 
-/* 8. ENCRYPTED SYSTEM LOCKED PANEL MODULE */
 .lockdown-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 5rem 2rem;
-    border: 1px dashed var(--neon-magenta);
-    background: rgba(255, 0, 85, 0.02);
     text-align: center;
-}
-
-.matrix-lock-icon { font-size: 3rem; margin-bottom: 1.5rem; }
-.alert-color { color: var(--neon-magenta) !important; font-size: 2.2rem; }
-
-.terminal-alert-text {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.8;
-    text-align: left;
+    padding: 2.5rem 1rem;
+    border: 1px dashed rgba(255, 0, 85, 0.25);
+    background: rgba(255, 0, 85, 0.01);
     margin-top: 1.5rem;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 1rem;
-    border-left: 2px solid var(--neon-magenta);
+}
+.matrix-lock-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+.alert-color { color: var(--neon-magenta) !important; font-size: 1.6rem; }
+.terminal-alert-text {
+    font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; text-align: left;
+    margin-top: 1.2rem; background: rgba(0, 0, 0, 0.2); padding: 0.8rem; border-left: 2px solid var(--neon-magenta);
 }
 
-/* KEYFRAME ANIMATION ARRAYS */
-@keyframes flash { from { opacity: 0.3; } to { opacity: 1; } }
-@keyframes glitch-anim-1 { 0%, 100% { clip: rect(20px, 9999px, 60px, 0); } 50% { clip: rect(80px, 9999px, 10px, 0); } }
-@keyframes glitch-anim-2 { 0%, 100% { clip: rect(70px, 9999px, 120px, 0); } 50% { clip: rect(10px, 9999px, 85px, 0); } }
+/* ============================================================================
+   NEW REPLACEMENT FEATURE ELEMENT: PRODUCTION TELEMETRY DATA DOCK SYSTEM 
+   ============================================================================ */
+.system-data-dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(6, 6, 10, 0.9);
+    border-top: 1px solid rgba(0, 240, 255, 0.2);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 95;
+    backdrop-filter: blur(8px);
+}
+
+[data-theme="cyber-light"] .system-data-dock {
+    background: rgba(240, 242, 245, 0.9);
+    border-top: 1px solid rgba(255, 0, 85, 0.2);
+}
+
+.dock-segment {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+}
+
+.dock-label { color: var(--text-muted); }
+.text-green { color: var(--neon-green) !important; text-shadow: 0 0 5px var(--neon-green); }
+
+/* --- DOCK & CARD MULTI-DEVICE DEVICE BREAKPOINTS --- */
+.hide-mobile { display: block; }
+
+@media (max-width: 767px) {
+    .hide-mobile { display: none !important; } /* Strips trailing mouse trackers on phone touchscreens entirely */
+}
+
+@media (min-width: 768px) {
+    .glitch-text { font-size: 3.5rem; }
+    .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.8rem; }
+    .cyber-nav { padding: 1rem 2rem; }
+    .nav-brand { font-size: 1rem; }
+    .tab-btn { font-size: 0.85rem; padding: 0.4rem 1rem; }
+    .interface-wrapper { padding: 6rem 2rem 5rem 2rem; }
+    .system-data-dock { padding: 0.6rem 2rem; justify-content: flex-start; gap: 3rem; }
+    .dock-segment { font-size: 0.75rem; }
+}
