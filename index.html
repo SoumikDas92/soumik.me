@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyber-dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL // SOUMIK_DAS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. SYSTEM BOOT DISPLAY INTERFACE -->
+    <div id="loading-screen">
+        <div class="loader-terminal">
+            <p class="load-line">> COMPILING DATA ARCHITECTURE...</p>
+            <p class="load-line">> CORRELATING COGNITIVE PATHS...</p>
+            <p class="load-line">> SYNCING GRID LINK: B.TECH_CSE_CORE...</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+            <p class="load-status">LOADING SYSTEM: 0%</p>
+        </div>
+    </div>
+
+    <!-- 2. HARDWARE GRAPHICS LAYERS -->
+    <div id="custom-cyber-cursor"></div>
+    <canvas id="cyberCanvas"></canvas>
+
+    <!-- 3. TOP LEVEL SYSTEM NAVIGATION TERMINAL -->
+    <nav class="cyber-nav">
+        <div class="nav-brand">SD_OS // CORE_SYS_v2.5</div>
+        <div class="nav-controls">
+            <!-- INNOVATIVE DESIGN: THEME DUAL TOGGLE SWITCH -->
+            <button class="theme-toggle" onclick="toggleCyberTheme()" title="Toggle Theme Matrix">
+                <span class="theme-icon">⚡</span> MATRIX_MODE
+            </button>
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="switchConsole('profile')">01_CORE</button>
+                <button class="tab-btn" onclick="switchConsole('projects')">02_ARCHIVES</button>
+                <button class="tab-btn alert-tab" onclick="switchConsole('achievements')">03_LOCKED</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 4. CORE CONTROLLER HUB PANELS -->
+    <main class="interface-wrapper">
+        
+        <!-- CONSOLE PANEL: PROFILE -->
+        <section id="profile-panel" class="console-panel active">
+            <div class="glitch-wrapper">
+                <h1 class="glitch-text" data-text="_SOUMIK_">_SOUMIK_</h1>
+            </div>
+            
+            <div class="grid-layout">
+                <!-- Academic Track -->
+                <div class="cyber-card neon-border-blue">
+                    <div class="card-header">[ ACADEMIC_PATH ]</div>
+                    <h3>B.TECH IN CSE</h3>
+                    <p class="tag-sub">> COMPUTER SCIENCE & ENGINEERING</p>
+                    <div class="status-indicator processing">
+                        <span class="pulse-dot"></span> SYSTEM_STATUS: INITIALIZING_NODE
+                    </div>
+                </div>
+
+                <!-- Career Ambitions -->
+                <div class="cyber-card neon-border-magenta">
+                    <div class="card-header">[ AMBITION_STREAM ]</div>
+                    <h3>GAME_DEVELOPER</h3>
+                    <p class="tag-sub">> INTERACTIVE ENGINE ARCHITECTURE</p>
+                    <p class="body-text">
+                        Focused on writing clean code mechanics, optimizing low-level memory logic, and crafting dark, atmospheric gameplay environments.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONSOLE PANEL: PROJECTS -->
+        <section id="projects-panel" class="console-panel">
+            <header class="panel-title">// ACTIVE_GITHUB_REPOSITORIES</header>
+            <div class="grid-layout">
+                <div class="project-node interactive-card">
+                    <div class="node-tag">// LIVE_CORE_NODE</div>
+                    <h3>CYBER_PORTFOLIO</h3>
+                    <p class="body-text">An ultra-stylized web console interface built using vanilla HTML, CSS, and JS components, deployed seamlessly on GitHub Pages.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONSOLE PANEL: ACHIEVEMENTS -->
+        <section id="achievements-panel" class="console-panel">
+            <div class="lockdown-wrapper">
+                <div class="matrix-lock-icon">🔒</div>
+                <h2 class="glitch-text alert-color" data-text="COMING_VERY_SOON...">COMING_VERY_SOON...</h2>
+                <div class="glitch-bar"></div>
+                <p class="terminal-alert-text">
+                    > STATUS: SUB-SYSTEM ENCRYPTED. <br>
+                    > ERROR: Awaiting incoming data sync packets... <br>
+                    > Academic and gaming achievement nodes are locked by the network administrator.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
