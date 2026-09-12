@@ -2,110 +2,151 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-    <title>TERMINAL // SOUMIK_DAS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0c120f">
+    <meta name="description" content="Soumik Das — B.Tech CSE student and aspiring game developer. Building interactive worlds, one mechanic at a time.">
+    <title>Soumik Das · Portfolio</title>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- CYBER DIAGNOSTIC LOADER CONSOLE -->
+    <!-- GENTLE LOADER — "taking root" -->
     <div id="loading-screen">
-        <div class="loader-terminal">
-            <p class="load-line">> INITIALIZING BOOT_SEQUENCE...</p>
-            <p class="load-line">> SYNCING DUAL_DEVICE_OPTIMIZATIONS...</p>
-            <p class="load-line">> ESTABLISHING B.TECH_CSE_NODES...</p>
-            <div class="progress-bar-container">
-                <div class="progress-bar"></div>
+        <div class="loader-inner">
+            <div class="loader-sprout" aria-hidden="true">🌱</div>
+            <div class="loader-bar" role="presentation">
+                <div class="loader-bar-fill"></div>
             </div>
-            <p class="load-status">LOADING SYSTEM: 0%</p>
+            <p class="loader-status">preparing the soil…</p>
         </div>
     </div>
 
-    <!-- DIGITAL BACKGROUND ANIMATION CANVAS LAYER -->
-    <canvas id="cyberCanvas"></canvas>
+    <!-- AMBIENT FIREFLIES BACKGROUND -->
+    <canvas id="fireflies-canvas" aria-hidden="true"></canvas>
 
-    <!-- FLOATING RESPONSIVE HEADER CONSOLE -->
-    <nav class="cyber-nav">
-        <div class="nav-brand" onclick="toggleCyberTheme()">SD_OS // V3.0</div>
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchConsole('profile')">01_CORE</button>
-            <button class="tab-btn" onclick="switchConsole('projects')">02_ARCH</button>
-            <button class="tab-btn alert-tab" onclick="switchConsole('achievements')">03_LOCK</button>
+    <!-- FLOATING PILL NAVIGATION -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <button class="brand" onclick="switchPanel('profile')" aria-label="Soumik Das — home">
+                <span class="brand-leaf" aria-hidden="true">🌿</span>
+                <span class="brand-name">soumik.me</span>
+            </button>
+            <div class="nav-tabs" role="tablist">
+                <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchPanel('profile')">Home</button>
+                <button class="tab-btn" role="tab" aria-selected="false" onclick="switchPanel('projects')">Projects</button>
+                <button class="tab-btn" role="tab" aria-selected="false" onclick="switchPanel('achievements')">Achievements</button>
+            </div>
         </div>
     </nav>
 
-    <!-- CORE CONTENT PANEL LAYER -->
-    <main class="interface-wrapper">
-        
-        <!-- MODULE 01: PROFILE SECTION -->
-        <section id="profile-panel" class="console-panel active">
-            <div class="glitch-wrapper">
-                <h1 class="glitch-text" data-text="SOUMIK_DAS_">SOUMIK_DAS_</h1>
-            </div>
-            
-            <div class="grid-layout">
-                <!-- Academic Module Card -->
-                <div class="cyber-card neon-border-blue">
-                    <div class="card-header">[ CURRENT_STATION ]</div>
-                    <h3>B.TECH IN CSE</h3>
-                    <p class="tag-sub">> COMPUTER SCIENCE & ENGINEERING</p>
-                    <div class="status-indicator processing">
-                        <span class="pulse-dot"></span> Diagnostics Active
-                    </div>
-                </div>
+    <!-- MAIN CONTENT -->
+    <main class="content">
 
-                <!-- Ambitions Module Card -->
-                <div class="cyber-card neon-border-magenta">
-                    <div class="card-header">[ FUTURE_OBJECTIVE ]</div>
-                    <h3>GAME_DEVELOPER</h3>
-                    <p class="tag-sub">> CORE INTERACTIVE MECHANICS</p>
-                    <p class="body-text">
-                        Building complex digital mechanics, interactive gameplay architectures, and dark, immersive virtual environments from scratch.
+        <!-- PANEL 01 · HOME -->
+        <section id="profile-panel" class="panel active" role="tabpanel">
+            <p class="eyebrow">Hello, I'm</p>
+            <h1 class="hero-title">Soumik Das</h1>
+            <div class="hero-rule" aria-hidden="true"></div>
+            <p class="hero-sub">B.Tech CSE student by day, game-design tinkerer after hours.</p>
+            <p class="hero-blurb">
+                I love building things that feel alive — gameplay mechanics, interactive
+                systems and small immersive worlds, crafted from scratch with care.
+            </p>
+
+            <div class="chips" aria-label="Interests">
+                <span class="chip">🎮 Game development</span>
+                <span class="chip">🧩 Systems design</span>
+                <span class="chip">🌐 Web</span>
+                <span class="chip">✨ Worldbuilding</span>
+            </div>
+
+            <div class="grid">
+                <article class="card">
+                    <span class="card-kicker">🌿 Currently</span>
+                    <h3>Pursuing B.Tech in CSE</h3>
+                    <p class="card-text">
+                        Computer Science &amp; Engineering — deep in coursework, side projects
+                        and the occasional late-night debugging session.
                     </p>
-                </div>
+                    <span class="status-pill"><span class="pulse-dot"></span> In progress</span>
+                </article>
+
+                <article class="card card-accent">
+                    <span class="card-kicker">🎮 The dream</span>
+                    <h3>Game Developer</h3>
+                    <p class="card-text">
+                        Building complex interactive mechanics, gameplay architectures and
+                        immersive virtual environments from the ground up.
+                    </p>
+                </article>
             </div>
         </section>
 
-        <!-- MODULE 02: ARCHIVES / PROJECTS -->
-        <section id="projects-panel" class="console-panel">
-            <header class="panel-title">// ACTIVE_REPOSITORIES</header>
-            <div class="grid-layout">
-                <div class="project-node">
-                    <div class="node-tag">// CORE_PROJ_01</div>
-                    <h3>CYBER_PORTFOLIO</h3>
-                    <p class="body-text">> Responsive, zero-latency interface environment hosted live on GitHub Pages framework layers.</p>
-                </div>
+        <!-- PANEL 02 · PROJECTS -->
+        <section id="projects-panel" class="panel" role="tabpanel">
+            <p class="eyebrow">Garden of work</p>
+            <h2 class="panel-title">Things I'm building</h2>
+            <p class="panel-sub">Small experiments and projects — new ones take root here over time.</p>
+
+            <div class="grid">
+                <article class="card">
+                    <span class="card-kicker">🌿 Personal project</span>
+                    <h3>Portfolio Website</h3>
+                    <p class="card-text">
+                        The site you're looking at — a fast, responsive personal space designed
+                        and built from scratch, hosted on GitHub Pages.
+                    </p>
+                    <div class="tag-row">
+                        <span class="tag">HTML</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">JavaScript</span>
+                    </div>
+                </article>
+
+                <article class="card card-ghost">
+                    <span class="card-kicker">🌱 Brewing</span>
+                    <h3>More to come</h3>
+                    <p class="card-text">
+                        New experiments are germinating — game prototypes and interactive
+                        pieces will sprout here soon.
+                    </p>
+                </article>
             </div>
         </section>
 
-        <!-- MODULE 03: ACHIEVEMENTS LAYER -->
-        <section id="achievements-panel" class="console-panel">
-            <div class="lockdown-wrapper">
-                <div class="matrix-lock-icon">🔒</div>
-                <h2 class="glitch-text alert-color" data-text="COMING_SOON...">COMING_SOON...</h2>
-                <p class="terminal-alert-text">
-                    > WARNING: Sub-system encrypted.<br>
-                    > Awaiting data sync packet...<br>
-                    > Nodes locked by administrator.
+        <!-- PANEL 03 · ACHIEVEMENTS -->
+        <section id="achievements-panel" class="panel" role="tabpanel">
+            <div class="growth-card">
+                <div class="growth-icon" aria-hidden="true">🌱</div>
+                <h2 class="growth-title">Still growing</h2>
+                <p class="growth-text">
+                    Achievements, certifications and milestones are on their way.
+                    Check back soon — good things take time to bloom.
                 </p>
+                <div class="growth-line" aria-hidden="true"></div>
             </div>
         </section>
     </main>
 
-    <!-- REWRITTEN DOCK: IMMERSIVE BACKGROUND CONSOLE TRACKER -->
-    <div class="system-data-dock">
-        <div class="dock-segment hide-mobile">
-            <span class="dock-label">CURSOR_X:</span> <span id="dock-mx">000</span>
-        </div>
-        <div class="dock-segment hide-mobile">
-            <span class="dock-label">CURSOR_Y:</span> <span id="dock-my">000</span>
-        </div>
-        <div class="dock-segment">
-            <span class="dock-label">SYS_STATUS:</span> <span class="dock-value text-green">ONLINE</span>
-        </div>
-        <div class="dock-segment">
-            <span class="dock-label">PING:</span> <span id="dock-ping">24ms</span>
-        </div>
-    </div>
+    <!-- QUIET FOOTER STRIP -->
+    <footer class="footer">
+        <span class="footer-left">© <span id="footer-year">2026</span> Soumik Das</span>
+        <span class="footer-right">
+            <span class="footer-status"><span class="pulse-dot"></span> growing steadily</span>
+            <span class="footer-sep" aria-hidden="true">·</span>
+            <span id="footer-clock">--:--</span>
+            <span class="footer-tz">Kolkata</span>
+        </span>
+    </footer>
+
+    <!-- FIREFLY POINTER GLOW (desktop only) -->
+    <div class="cursor-glow" aria-hidden="true"></div>
 
     <script src="script.js"></script>
 </body>

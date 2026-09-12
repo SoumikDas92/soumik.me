@@ -1,239 +1,218 @@
 /**
  * ============================================================================
- * SD_OS v3.0 - STABILIZED UNIVERSAL DEVICE PIPELINE
- * AUTHOR: SOUMIK_DAS | MODULE: CORE PROCESSOR & STABILIZATION
+ * soumik.me — fresh & natural edition
+ * Interactions: panel switching · sprout loader · fireflies canvas ·
+ *               pointer firefly · footer clock
  * ============================================================================
  */
 
-// --- GLOBAL VARIABLES & SYSTEM CAPABILITIES MATRIX ---
 const state = {
-    theme: localStorage.getItem('cyber-theme') || 'cyber-dark',
-    audioCtx: null,
-    canvasResizeTimeout: null,
-    isMobile: window.innerWidth < 768,
+    isMobile: window.innerWidth < 700,
+    prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-    trail: Array(5).fill({ x: 0, y: 0 }), 
-    matrixFrameCount: 0
+    cursor: { x: window.innerWidth / 2, y: window.innerHeight / 2, seen: false },
+    canvasResizeTimeout: null
 };
 
-// --- INITIALIZE THEME SYSTEM CONFIGURATIONS ---
-document.documentElement.setAttribute('data-theme', state.theme);
+/* ---------------------------------------------------------------------------
+ * 1. PANEL SWITCHING — soft crossfade between sections
+ * ------------------------------------------------------------------------- */
+function switchPanel(panelTargetId) {
+    const targetPanel = document.getElementById(`${panelTargetId}-panel`);
+    if (!targetPanel) return;
 
-// --- 1. COORDINATED RESPONSIVE MOUSE & INTERACTIVE ACCELEROMETER COGNITION ---
-function initCustomCursorSystem() {
-    const cursorMain = document.getElementById('custom-cyber-cursor');
-    const dockMx = document.getElementById('dock-mx');
-    const dockMy = document.getElementById('dock-my');
-    
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+    });
+
+    targetPanel.classList.add('active');
+    document.querySelectorAll(`.tab-btn[onclick*="'${panelTargetId}'"]`).forEach(b => {
+        b.classList.add('active');
+        b.setAttribute('aria-selected', 'true');
+    });
+}
+window.switchPanel = switchPanel;
+
+/* ---------------------------------------------------------------------------
+ * 2. FIREFLIES CANVAS — soft glowing spores drifting through the dark
+ * ------------------------------------------------------------------------- */
+const canvas = document.getElementById('fireflies-canvas');
+if (canvas && !state.prefersReducedMotion) {
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+
+    // Pre-rendered glow sprites (much cheaper than shadowBlur per particle)
+    function makeGlowSprite(inner, outer) {
+        const size = 64;
+        const sprite = document.createElement('canvas');
+        sprite.width = size;
+        sprite.height = size;
+        const sctx = sprite.getContext('2d');
+        const grad = sctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+        grad.addColorStop(0, inner);
+        grad.addColorStop(0.4, outer);
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        sctx.fillStyle = grad;
+        sctx.fillRect(0, 0, size, size);
+        return sprite;
+    }
+
+    const sprites = [
+        makeGlowSprite('rgba(226, 246, 205, 0.95)', 'rgba(158, 208, 162, 0.35)'),  // sage green
+        makeGlowSprite('rgba(245, 224, 190, 0.95)', 'rgba(226, 180, 140, 0.30)')   // warm clay
+    ];
+
+    function setupCanvas() {
+        state.isMobile = window.innerWidth < 700;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const targetCount = state.isMobile ? 22 : Math.min(52, Math.floor(canvas.width * canvas.height / 26000));
+        particles.length = 0;
+
+        for (let i = 0; i < targetCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: 5 + Math.random() * 14,
+                riseSpeed: 0.12 + Math.random() * 0.3,
+                swayAmp: 12 + Math.random() * 30,
+                swaySpeed: 0.004 + Math.random() * 0.006,
+                phase: Math.random() * Math.PI * 2,
+                twinkleSpeed: 0.008 + Math.random() * 0.015,
+                baseAlpha: 0.25 + Math.random() * 0.5,
+                sprite: sprites[Math.random() < 0.78 ? 0 : 1]
+            });
+        }
+    }
+    setupCanvas();
+
+    window.addEventListener('resize', () => {
+        clearTimeout(state.canvasResizeTimeout);
+        state.canvasResizeTimeout = setTimeout(setupCanvas, 150);
+    });
+
+    let tick = 0;
+    function drawFireflies() {
+        tick++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (const p of particles) {
+            p.y -= p.riseSpeed;
+            p.x += Math.sin(tick * p.swaySpeed + p.phase) * 0.35;
+
+            // Wrap gently around the edges
+            if (p.y < -30) { p.y = canvas.height + 30; p.x = Math.random() * canvas.width; }
+            if (p.x < -30) p.x = canvas.width + 30;
+            if (p.x > canvas.width + 30) p.x = -30;
+
+            const twinkle = 0.55 + 0.45 * Math.sin(tick * p.twinkleSpeed + p.phase);
+            ctx.globalAlpha = p.baseAlpha * twinkle;
+            ctx.drawImage(p.sprite, p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    /* -- pointer firefly follows the mouse inside the same loop ------------- */
+    const cursorGlow = document.querySelector('.cursor-glow');
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+
     window.addEventListener('mousemove', (e) => {
         state.mouse.x = e.clientX;
         state.mouse.y = e.clientY;
-        
-        // 1a. Update localized numeric data telemetry arrays inside bottom dock values instantly
-        if (dockMx) dockMx.textContent = String(state.mouse.x).padStart(3, '0');
-        if (dockMy) dockMy.textContent = String(state.mouse.y).padStart(3, '0');
-        
-        // 1b. Render design pointer elements only on compatible desktop platforms
-        if (!state.isMobile && cursorMain) {
-            cursorMain.style.transform = `translate3d(${state.mouse.x}px, ${state.mouse.y}px, 0)`;
+        if (cursorGlow && !state.cursor.seen) {
+            state.cursor.seen = true;
+            cursorGlow.classList.add('is-visible');
         }
     });
 
     document.body.addEventListener('mouseover', (e) => {
-        if (!state.isMobile && cursorMain && e.target.closest('.tab-btn, .project-node, .nav-brand')) {
-            cursorMain.classList.add('cursor-hover-active');
+        if (cursorGlow && e.target.closest('.tab-btn, .card, .chip, .brand')) {
+            cursorGlow.classList.add('is-hover');
         }
     });
 
     document.body.addEventListener('mouseout', (e) => {
-        if (!state.isMobile && cursorMain && e.target.closest('.tab-btn, .project-node, .nav-brand')) {
-            cursorMain.classList.remove('cursor-hover-active');
+        if (cursorGlow && e.target.closest('.tab-btn, .card, .chip, .brand')) {
+            cursorGlow.classList.remove('is-hover');
         }
     });
-}
 
-// --- 2. MULTI-MODE CONSOLE INTERFACE NAVIGATION CONTROLS ---
-function switchConsole(panelTargetId) {
-    playCyberSound('click');
-    const targetPanel = document.getElementById(`${panelTargetId}-panel`);
-    if (!targetPanel) return;
+    function animationLoop() {
+        drawFireflies();
 
-    document.querySelectorAll('.console-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-    targetPanel.classList.add('active');
-    const linkedButtons = document.querySelectorAll(`.tab-btn[onclick*="'${panelTargetId}'"]`);
-    linkedButtons.forEach(b => b.classList.add('active'));
-}
-
-// --- 3. DYNAMIC LOW-OVERHEAD CANVAS HARDWARE RENDERING ENGINES ---
-const canvas = document.getElementById('cyberCanvas');
-if (canvas) {
-    const ctx = canvas.getContext('2d');
-    const systemSymbols = '01🧬💻🤖SD_OS_CSE_'.split('');
-    const fontSize = 12;
-    let columns = 0;
-    let dropTracks = [];
-
-    function setupCanvasMetrics() {
-        state.isMobile = window.innerWidth < 768;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        columns = Math.floor(canvas.width / fontSize) + 1;
-        
-        // Mobile booster: Cap data matrix columns on small screens to reduce calculations
-        const trackCount = state.isMobile ? Math.min(columns, 35) : columns;
-        dropTracks = Array(trackCount).fill(1).map(() => Math.random() * -25);
-    }
-    setupCanvasMetrics();
-
-    window.addEventListener('resize', () => {
-        clearTimeout(state.canvasResizeTimeout);
-        state.canvasResizeTimeout = setTimeout(setupCanvasMetrics, 150);
-    });
-
-    function drawSystemMatrix() {
-        state.matrixFrameCount++;
-        
-        // MOBILE FRAME RATIO OPTIMIZER: Skips alternative calculations on mobile views to prevent overheating
-        if (state.isMobile && state.matrixFrameCount % 2 !== 0) {
-            return;
+        if (finePointer && cursorGlow) {
+            state.cursor.x += (state.mouse.x - state.cursor.x) * 0.12;
+            state.cursor.y += (state.mouse.y - state.cursor.y) * 0.12;
+            cursorGlow.style.transform =
+                `translate(${state.cursor.x - 8}px, ${state.cursor.y - 8}px)`;
         }
 
-        const fade = state.theme === 'cyber-dark' ? 'rgba(6, 6, 10, 0.08)' : 'rgba(242, 244, 247, 0.12)';
-        const textNeon = state.theme === 'cyber-dark' ? '#00f0ff' : '#ff0055';
-
-        ctx.fillStyle = fade;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = `bold ${fontSize}px monospace`;
-
-        for (let idx = 0; idx < dropTracks.length; idx++) {
-            ctx.fillStyle = textNeon;
-            const char = systemSymbols[Math.floor(Math.random() * systemSymbols.length)];
-            const xPos = state.isMobile ? (idx * (canvas.width / dropTracks.length)) : (idx * fontSize);
-            ctx.fillText(char, xPos, dropTracks[idx] * fontSize);
-
-            if (dropTracks[idx] * fontSize > canvas.height && Math.random() > 0.98) {
-                dropTracks[idx] = 0;
-            }
-            dropTracks[idx] += 0.9;
-        }
-
-        // Elastic pointer trail vectors rendered exclusively on top layout configurations
-        if (!state.isMobile) {
-            let currentX = state.mouse.x;
-            let currentY = state.mouse.y;
-
-            state.trail.forEach((point, i) => {
-                point.x += (currentX - point.x) * 0.35;
-                point.y += (currentY - point.y) * 0.35;
-
-                ctx.beginPath();
-                ctx.arc(point.x, point.y, (5 - i) * 0.8, 0, Math.PI * 2);
-                ctx.fillStyle = state.theme === 'cyber-dark' ? `rgba(255, 0, 85, ${0.3 - i * 0.05})` : `rgba(0, 240, 255, ${0.3 - i * 0.05})`;
-                ctx.fill();
-
-                currentX = point.x;
-                currentY = point.y;
-            });
-        }
+        requestAnimationFrame(animationLoop);
     }
-    
-    function animationEngineLoop() {
-        drawSystemMatrix();
-        requestAnimationFrame(animationEngineLoop);
-    }
-    requestAnimationFrame(animationEngineLoop);
+    requestAnimationFrame(animationLoop);
+} else if (canvas && state.prefersReducedMotion) {
+    // Draw one calm, static frame so the scene still feels alive but still
+    canvas.style.opacity = '0.5';
 }
 
-// --- 4. HARDWARE AUDIOLOGY HARDWARE CONSOLE INTERFACES ---
-function initAudio() {
-    if (!state.audioCtx) {
-        state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (state.audioCtx.state === 'suspended') {
-        state.audioCtx.resume();
-    }
-}
-
-function playCyberSound(type) {
-    if (state.isMobile) return; // Suppress sound engine threads on small devices for optimized memory handling
-    try {
-        initAudio();
-        const ctx = state.audioCtx;
-        const osc = ctx.createOscillator();
-        const gainNode = ctx.createGain();
-        
-        osc.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        const now = ctx.currentTime;
-
-        if (type === 'click') {
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(750, now);
-            osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
-            gainNode.gain.setValueAtTime(0.04, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-            osc.start(now); osc.stop(now + 0.08);
-        } else if (type === 'success') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, now);
-            osc.frequency.setValueAtTime(783.99, now + 0.06);
-            gainNode.gain.setValueAtTime(0.03, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-            osc.start(now); osc.stop(now + 0.2);
-        }
-    } catch (e) {
-        console.warn("Audio thread protection bypassed.");
-    }
-}
-
-// --- 5. THEME SWAPPING OPERATIONAL PIPELINES ---
-function toggleCyberTheme() {
-    playCyberSound('success');
-    state.theme = state.theme === 'cyber-dark' ? 'cyber-light' : 'cyber-dark';
-    document.documentElement.setAttribute('data-theme', state.theme);
-    localStorage.setItem('cyber-theme', state.theme);
-}
-
-// --- 6. ASYNCHRONOUS SIMULATED LOADER SEQUENCES ---
+/* ---------------------------------------------------------------------------
+ * 3. SPROUT LOADER — quick, quiet, then gone
+ * ------------------------------------------------------------------------- */
 window.addEventListener('DOMContentLoaded', () => {
-    initCustomCursorSystem();
-
-    const progressBar = document.querySelector('.progress-bar');
-    const statusLabel = document.querySelector('.load-status');
     const loadingScreen = document.getElementById('loading-screen');
-    const dockPing = document.getElementById('dock-ping');
-    let processValue = 0;
-    
-    // Periodically fluctuate ping display inside the bottom data dock to simulate active server responses
-    setInterval(() => {
-        if(dockPing) {
-            dockPing.textContent = `${Math.floor(Math.random() * 18) + 12}ms`;
-        }
-    }, 2500);
+    const progressBar = document.querySelector('.loader-bar-fill');
+    const statusLabel = document.querySelector('.loader-status');
 
+    const footerYear = document.getElementById('footer-year');
+    if (footerYear) footerYear.textContent = new Date().getFullYear();
+
+    /* -- footer clock: the gardener's local time (Kolkata) ----------------- */
+    const footerClock = document.getElementById('footer-clock');
+    if (footerClock) {
+        const clockFormat = new Intl.DateTimeFormat('en-IN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'Asia/Kolkata'
+        });
+        const updateClock = () => { footerClock.textContent = clockFormat.format(new Date()); };
+        updateClock();
+        setInterval(updateClock, 15000);
+    }
+
+    if (!loadingScreen) return;
+
+    // Reduced motion visitors skip the ritual entirely
+    if (state.prefersReducedMotion) {
+        loadingScreen.style.display = 'none';
+        return;
+    }
+
+    const loadSteps = [
+        { at: 0,  label: 'preparing the soil…' },
+        { at: 38, label: 'planting seeds…' },
+        { at: 72, label: 'sprouting…' },
+        { at: 96, label: 'almost in bloom…' }
+    ];
+
+    let progress = 0;
     const loadInterval = setInterval(() => {
-        processValue += Math.floor(Math.random() * 6) + 3;
-        
-        if (processValue >= 100) {
-            processValue = 100;
-            clearInterval(loadInterval);
-            
-            setTimeout(() => {
-                playCyberSound('success');
-                if (loadingScreen) {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => loadingScreen.style.display = 'none', 400);
-                }
-            }, 300);
-        }
-        
-        if (progressBar) progressBar.style.width = `${processValue}%`;
-        if (statusLabel) statusLabel.textContent = `LOADING SYSTEM: ${processValue}%`;
-    }, 45);
-});
+        progress = Math.min(100, progress + Math.floor(Math.random() * 7) + 4);
 
-// --- CORE SYSTEM REGISTRIES LINK ---
-window.switchConsole = switchConsole;
-window.toggleCyberTheme = toggleCyberTheme;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+
+        const step = [...loadSteps].reverse().find(s => progress >= s.at);
+        if (statusLabel && step) statusLabel.textContent = step.label;
+
+        if (progress >= 100) {
+            clearInterval(loadInterval);
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
+            }, 250);
+        }
+    }, 55);
+});
