@@ -1,0 +1,13 @@
+{
+  "name": "soumik-me",
+  "private": true,
+  "description": "soumik.me — personal portfolio (static site)",
+  "scripts": {
+    "build": "echo 'Static site — no build step required.'",
+    "preview": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
