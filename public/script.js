@@ -1,218 +1,137 @@
-/**
- * ============================================================================
- * soumik.me — fresh & natural edition
- * Interactions: panel switching · sprout loader · fireflies canvas ·
- *               pointer firefly · footer clock
- * ============================================================================
- */
+import { research, learning, projects, experience, contact } from './content.js';
+const $ = selector => document.querySelector(selector);
+const node = (tag, text, cls) => Object.assign(document.createElement(tag), { textContent: text, className: cls || '' });
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
-const state = {
-    isMobile: window.innerWidth < 700,
-    prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-    cursor: { x: window.innerWidth / 2, y: window.innerHeight / 2, seen: false },
-    canvasResizeTimeout: null
-};
-
-/* ---------------------------------------------------------------------------
- * 1. PANEL SWITCHING — soft crossfade between sections
- * ------------------------------------------------------------------------- */
-function switchPanel(panelTargetId) {
-    const targetPanel = document.getElementById(`${panelTargetId}-panel`);
-    if (!targetPanel) return;
-
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-    });
-
-    targetPanel.classList.add('active');
-    document.querySelectorAll(`.tab-btn[onclick*="'${panelTargetId}'"]`).forEach(b => {
-        b.classList.add('active');
-        b.setAttribute('aria-selected', 'true');
-    });
+function renderNotes(target, entries, symbols = false) {
+  entries.forEach(([title, text], index) => {
+    const item = node('details', '');
+    const summary = node('summary', title);
+    if (symbols) {
+      const icon = node('span', `◇ / 0${index + 1}`, 'research-icon');
+      icon.setAttribute('aria-hidden', 'true');
+      summary.prepend(icon);
+    }
+    item.append(summary, node('p', text));
+    $(target).append(item);
+  });
 }
-window.switchPanel = switchPanel;
-
-/* ---------------------------------------------------------------------------
- * 2. FIREFLIES CANVAS — soft glowing spores drifting through the dark
- * ------------------------------------------------------------------------- */
-const canvas = document.getElementById('fireflies-canvas');
-if (canvas && !state.prefersReducedMotion) {
-    const ctx = canvas.getContext('2d');
-    const particles = [];
-
-    // Pre-rendered glow sprites (much cheaper than shadowBlur per particle)
-    function makeGlowSprite(inner, outer) {
-        const size = 64;
-        const sprite = document.createElement('canvas');
-        sprite.width = size;
-        sprite.height = size;
-        const sctx = sprite.getContext('2d');
-        const grad = sctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-        grad.addColorStop(0, inner);
-        grad.addColorStop(0.4, outer);
-        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        sctx.fillStyle = grad;
-        sctx.fillRect(0, 0, size, size);
-        return sprite;
-    }
-
-    const sprites = [
-        makeGlowSprite('rgba(226, 246, 205, 0.95)', 'rgba(158, 208, 162, 0.35)'),  // sage green
-        makeGlowSprite('rgba(245, 224, 190, 0.95)', 'rgba(226, 180, 140, 0.30)')   // warm clay
-    ];
-
-    function setupCanvas() {
-        state.isMobile = window.innerWidth < 700;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const targetCount = state.isMobile ? 22 : Math.min(52, Math.floor(canvas.width * canvas.height / 26000));
-        particles.length = 0;
-
-        for (let i = 0; i < targetCount; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: 5 + Math.random() * 14,
-                riseSpeed: 0.12 + Math.random() * 0.3,
-                swayAmp: 12 + Math.random() * 30,
-                swaySpeed: 0.004 + Math.random() * 0.006,
-                phase: Math.random() * Math.PI * 2,
-                twinkleSpeed: 0.008 + Math.random() * 0.015,
-                baseAlpha: 0.25 + Math.random() * 0.5,
-                sprite: sprites[Math.random() < 0.78 ? 0 : 1]
-            });
-        }
-    }
-    setupCanvas();
-
-    window.addEventListener('resize', () => {
-        clearTimeout(state.canvasResizeTimeout);
-        state.canvasResizeTimeout = setTimeout(setupCanvas, 150);
-    });
-
-    let tick = 0;
-    function drawFireflies() {
-        tick++;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (const p of particles) {
-            p.y -= p.riseSpeed;
-            p.x += Math.sin(tick * p.swaySpeed + p.phase) * 0.35;
-
-            // Wrap gently around the edges
-            if (p.y < -30) { p.y = canvas.height + 30; p.x = Math.random() * canvas.width; }
-            if (p.x < -30) p.x = canvas.width + 30;
-            if (p.x > canvas.width + 30) p.x = -30;
-
-            const twinkle = 0.55 + 0.45 * Math.sin(tick * p.twinkleSpeed + p.phase);
-            ctx.globalAlpha = p.baseAlpha * twinkle;
-            ctx.drawImage(p.sprite, p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
-        }
-        ctx.globalAlpha = 1;
-    }
-
-    /* -- pointer firefly follows the mouse inside the same loop ------------- */
-    const cursorGlow = document.querySelector('.cursor-glow');
-    const finePointer = window.matchMedia('(pointer: fine)').matches;
-
-    window.addEventListener('mousemove', (e) => {
-        state.mouse.x = e.clientX;
-        state.mouse.y = e.clientY;
-        if (cursorGlow && !state.cursor.seen) {
-            state.cursor.seen = true;
-            cursorGlow.classList.add('is-visible');
-        }
-    });
-
-    document.body.addEventListener('mouseover', (e) => {
-        if (cursorGlow && e.target.closest('.tab-btn, .card, .chip, .brand')) {
-            cursorGlow.classList.add('is-hover');
-        }
-    });
-
-    document.body.addEventListener('mouseout', (e) => {
-        if (cursorGlow && e.target.closest('.tab-btn, .card, .chip, .brand')) {
-            cursorGlow.classList.remove('is-hover');
-        }
-    });
-
-    function animationLoop() {
-        drawFireflies();
-
-        if (finePointer && cursorGlow) {
-            state.cursor.x += (state.mouse.x - state.cursor.x) * 0.12;
-            state.cursor.y += (state.mouse.y - state.cursor.y) * 0.12;
-            cursorGlow.style.transform =
-                `translate(${state.cursor.x - 8}px, ${state.cursor.y - 8}px)`;
-        }
-
-        requestAnimationFrame(animationLoop);
-    }
-    requestAnimationFrame(animationLoop);
-} else if (canvas && state.prefersReducedMotion) {
-    // Draw one calm, static frame so the scene still feels alive but still
-    canvas.style.opacity = '0.5';
+renderNotes('#research-list', research, true);
+renderNotes('#learning-list', learning);
+function link(text, url) {
+  const anchor = node('a', text, 'button');
+  anchor.href = url;
+  return anchor;
 }
-
-/* ---------------------------------------------------------------------------
- * 3. SPROUT LOADER — quick, quiet, then gone
- * ------------------------------------------------------------------------- */
-window.addEventListener('DOMContentLoaded', () => {
-    const loadingScreen = document.getElementById('loading-screen');
-    const progressBar = document.querySelector('.loader-bar-fill');
-    const statusLabel = document.querySelector('.loader-status');
-
-    const footerYear = document.getElementById('footer-year');
-    if (footerYear) footerYear.textContent = new Date().getFullYear();
-
-    /* -- footer clock: the gardener's local time (Kolkata) ----------------- */
-    const footerClock = document.getElementById('footer-clock');
-    if (footerClock) {
-        const clockFormat = new Intl.DateTimeFormat('en-IN', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-            timeZone: 'Asia/Kolkata'
-        });
-        const updateClock = () => { footerClock.textContent = clockFormat.format(new Date()); };
-        updateClock();
-        setInterval(updateClock, 15000);
+if (projects.length) {
+  const list = $('#project-list');
+  list.className = 'grid';
+  list.replaceChildren(...projects.map(project => {
+    const card = node('article', '');
+    card.append(node('h3', project.name), node('p', project.description));
+    for (const image of project.images || []) card.append(Object.assign(node('img', ''), { ...image, loading: 'lazy', decoding: 'async' }));
+    for (const [label, value] of Object.entries({ Technologies: project.technologies, Concepts: project.concepts, Challenges: project.challenges, Process: project.process })) {
+      if (value?.length) card.append(node('h4', label), node('p', Array.isArray(value) ? value.join(' · ') : value));
     }
+    if (project.repository) card.append(link('Repository ↗', project.repository));
+    if (project.demo) card.append(link('Live demonstration ↗', project.demo));
+    return card;
+  }));
+}
+for (const entry of experience) {
+  const item = node('li', '');
+  item.append(node('span', entry.label, 'eyebrow'), node('h3', entry.title), node('p', entry.description));
+  $('#experience-list').append(item);
+}
+$('#contact-list').replaceChildren(...Object.entries(contact).map(([name, url]) => {
+  const item = node('li', url ? '' : `${name} · Not listed`);
+  if (url) item.append(link(`${name} ↗`, url));
+  return item;
+}));
+if (Object.values(contact).some(Boolean)) $('.contact > p:not(.eyebrow)').textContent = 'Find me through the channels below.';
 
-    if (!loadingScreen) return;
-
-    // Reduced motion visitors skip the ritual entirely
-    if (state.prefersReducedMotion) {
-        loadingScreen.style.display = 'none';
-        return;
-    }
-
-    const loadSteps = [
-        { at: 0,  label: 'preparing the soil…' },
-        { at: 38, label: 'planting seeds…' },
-        { at: 72, label: 'sprouting…' },
-        { at: 96, label: 'almost in bloom…' }
-    ];
-
-    let progress = 0;
-    const loadInterval = setInterval(() => {
-        progress = Math.min(100, progress + Math.floor(Math.random() * 7) + 4);
-
-        if (progressBar) progressBar.style.width = `${progress}%`;
-
-        const step = [...loadSteps].reverse().find(s => progress >= s.at);
-        if (statusLabel && step) statusLabel.textContent = step.label;
-
-        if (progress >= 100) {
-            clearInterval(loadInterval);
-            setTimeout(() => {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
-            }, 250);
-        }
-    }, 55);
+const menu = $('.menu');
+const navigation = $('#navigation');
+const narrow = matchMedia('(max-width:800px)');
+function setMenu(open) {
+  menu.hidden = !narrow.matches;
+  menu.setAttribute('aria-expanded', String(open && narrow.matches));
+  navigation.hidden = narrow.matches && !open;
+}
+setMenu(false);
+narrow.addEventListener('change', () => setMenu(false));
+menu.addEventListener('click', () => setMenu(menu.getAttribute('aria-expanded') === 'false'));
+navigation.addEventListener('click', event => { if (event.target.closest('a')) setMenu(false); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') { setMenu(false); menu.focus(); } });
+const navLinks = [...navigation.querySelectorAll('a')];
+let scheduled = false;
+function track() {
+  if (scheduled) return;
+  scheduled = true;
+  requestAnimationFrame(() => {
+    scheduled = false;
+    const atEnd = scrollY + innerHeight >= document.documentElement.scrollHeight - 3;
+    const current = atEnd ? navLinks.at(-1) : navLinks.findLast(link => $(link.hash).getBoundingClientRect().top <= innerHeight * .42) || navLinks[0];
+    navLinks.forEach(link => link === current ? link.setAttribute('aria-current', 'location') : link.removeAttribute('aria-current'));
+  });
+}
+addEventListener('scroll', track, {passive:true}); addEventListener('resize', track); track();
+if ('IntersectionObserver' in window && !reduced.matches) {
+  const observer = new IntersectionObserver(entries => entries.forEach(({target,isIntersecting}) => {
+    if (isIntersecting) { target.classList.add('enter'); observer.unobserve(target); }
+  }), {threshold:.12});
+  document.querySelectorAll('.chapter').forEach(section => observer.observe(section));
+}
+if (matchMedia('(hover:hover) and (pointer:fine)').matches) {
+  const pointer = node('div', '', 'pointer'); pointer.setAttribute('aria-hidden','true'); document.body.append(pointer);
+  document.addEventListener('pointermove', event => {
+    if (reduced.matches || event.pointerType !== 'mouse') return;
+    pointer.style.opacity = '1'; pointer.style.left = `${event.clientX}px`; pointer.style.top = `${event.clientY}px`;
+    pointer.classList.toggle('hot', !!event.target.closest('a,button,summary'));
+  }, {passive:true});
+  document.documentElement.addEventListener('pointerleave', () => { pointer.style.opacity = '0'; });
+  document.querySelectorAll('.button').forEach(button => {
+    button.addEventListener('pointermove', event => {
+      if (reduced.matches || event.pointerType !== 'mouse') return;
+      const box = button.getBoundingClientRect();
+      button.style.setProperty('--mx', `${(event.clientX - box.left - box.width / 2) * .08}px`);
+      button.style.setProperty('--my', `${(event.clientY - box.top - box.height / 2) * .16}px`);
+    });
+    button.addEventListener('pointerleave', () => { button.style.removeProperty('--mx'); button.style.removeProperty('--my'); });
+  });
+}
+const diagram = $('#diagram'); diagram.hidden = false;
+diagram.addEventListener('click', () => diagram.setAttribute('aria-pressed', String($('.blueprint').classList.toggle('active'))));
+const dialog = $('#lab');
+const trigger = $('#open-lab'); trigger.hidden = typeof dialog.showModal !== 'function';
+let scene;
+trigger.addEventListener('click', async () => {
+  dialog.showModal();
+  if (scene) { scene.start(); return; }
+  try {
+    const { createLab } = await import('./lab.js');
+    if (!dialog.open || scene) return;
+    scene = createLab($('#viewport'), $('#angle'), $('#elbow'), $('#reset'));
+    $('.lab-controls').hidden = false;
+    $('#lab-status').hidden = true;
+    scene.start();
+  } catch {
+    $('#lab-status').textContent = 'Interactive 3D is unavailable on this device. You can still view the concept illustration.';
+  }
 });
+dialog.addEventListener('close', () => { scene?.stop(); trigger.focus(); });
+if (!reduced.matches) {
+  const intro = $('.intro-controls');
+  intro.hidden = false;
+  const finish = () => { intro.hidden = true; };
+  const timer = setTimeout(() => {
+    if (!intro.contains(document.activeElement)) finish();
+    else intro.addEventListener('focusout', finish, {once:true});
+  }, 1200);
+  $('#skip-intro').addEventListener('click', () => {
+    clearTimeout(timer);
+    $('.hero').classList.add('skip-intro');
+    $('.primary').focus({preventScroll:true});
+    finish();
+  });
+}
